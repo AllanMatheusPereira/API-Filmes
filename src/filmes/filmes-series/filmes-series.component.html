@@ -1,0 +1,99 @@
+<div class="container mt-5">
+  <h1 class="title has-text-centered mb-4">Buscar Filmes e Séries</h1>
+
+  <div class="search-area">
+    <form (ngSubmit)="buscarFilmes()" #form="ngForm" class="mb-4">
+      <div class="field has-addons">
+        <div class="control is-expanded">
+          <input
+            type="text"
+            [(ngModel)]="titulo"
+            name="titulo"
+            class="input"
+            placeholder="Digite o título do filme ou série"
+            required
+          />
+        </div>
+        <div class="control">
+          <button type="submit" class="button is-primary" [disabled]="form.invalid">
+            Buscar
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <button class="button is-favorite" (click)="toggleFavoritos()">
+      <span class="icon"><i class="fas fa-star"></i></span>
+      <span>Favoritos</span>
+    </button>
+  </div>
+
+  <div *ngIf="erro" class="has-text-danger mt-4">
+    {{ erro }}
+  </div>
+
+  <div *ngIf="resultado.length > 0" class="mt-4">
+    <div class="columns is-multiline">
+      <div class="column is-3" *ngFor="let filme of resultado">
+        <div class="card">
+          <div class="card-image">
+            <img [src]="filme.Poster" alt="{{ filme.Title }}" class="img-thumbnail" />
+          </div>
+          <div class="card-content">
+            <h5 class="title is-5">{{ filme.Title }} ({{ filme.Year }})</h5>
+            <p><strong>Diretor:</strong> {{ filme.Director }}</p>
+            <p><strong>Elenco:</strong> {{ filme.Actors }}</p>
+            <p><strong>Gênero:</strong> {{ filme.Genre }}</p>
+            <p><strong>Avaliação:</strong> {{ filme.Rated }}</p>
+            <p><strong>Lançamento:</strong> {{ filme.Released }}</p>
+            <p><strong>Duração:</strong> {{ filme.Runtime }}</p>
+            <p><strong>Roteirista:</strong> {{ filme.Writer }}</p>
+            <p><strong>Premiações:</strong> {{ filme.Awards }}</p>
+            <button class="button is-small is-success" *ngIf="!isFavorito(filme)" (click)="adicionarFavorito(filme)">
+              Adicionar aos Favoritos
+            </button>
+            <button class="button is-small is-danger" *ngIf="isFavorito(filme)" (click)="removerFavorito(filme)">
+              Remover dos Favoritos
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="resultado.length === 0 && erro === ''" class="mt-4 has-text-grey">
+    Nenhum filme ou série encontrado.
+  </div>
+
+  <div *ngIf="mostrarFavoritos" class="modal is-active">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <div class="box">
+        <h2 class="title is-4 has-text-centered">Meus Favoritos</h2>
+        <div *ngFor="let favorito of favoritos" class="card mb-4">
+          <div class="card-image">
+            <img [src]="favorito.Poster" alt="{{ favorito.Title }}" class="img-thumbnail" />
+          </div>
+          <div class="card-content">
+            <h5 class="title is-5">{{ favorito.Title }} ({{ favorito.Year }})</h5>
+            <p><strong>Diretor:</strong> {{ favorito.Director }}</p>
+            <p><strong>Elenco:</strong> {{ favorito.Actors }}</p>
+            <p><strong>Gênero:</strong> {{ favorito.Genre }}</p>
+            <p><strong>Avaliação:</strong> {{ favorito.Rated }}</p>
+            <p><strong>Lançamento:</strong> {{ favorito.Released }}</p>
+            <p><strong>Duração:</strong> {{ favorito.Runtime }}</p>
+            <p><strong>Roteirista:</strong> {{ favorito.Writer }}</p>
+            <p><strong>Premiações:</strong> {{ favorito.Awards }}</p>
+            <button class="button is-small is-danger" (click)="removerFavorito(favorito)">
+              Remover dos Favoritos
+            </button>
+          </div>
+        </div>
+        <button class="button is-danger is-outlined" (click)="mostrarFavoritos = false">
+          Fechar
+        </button>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" (click)="mostrarFavoritos = false"></button>
+  </div>
+</div>
